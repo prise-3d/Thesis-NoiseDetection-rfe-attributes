@@ -7,7 +7,7 @@ features_list="(filters_statistics|filters_statistics_sobel|svd|svd_sobel)"
 if [[ "$1" =~ ^(filters_statistics|filters_statistics_sobel|svd|svd_sobel)$ ]]; then
     echo "$1 is in the list"
 else
-    echo "$1 is not in the list, need argument from [${features_list}]"
+    echo "First arguement '$1' is not in the list, need argument from [${features_list}]"
     exit 1
 fi
 
@@ -25,7 +25,7 @@ data_list="(all|center|split)"
 if [[ "$2" =~ ^(all|center|split)$ ]]; then
     echo "$2 is in the list"
 else
-    echo "$2 is not in the list, need argument from [${data_list}]"
+    echo "Second argument '$2' is not in the list, need argument from [${data_list}]"
 fi
 
 # accept data param

@@ -33,7 +33,7 @@ data=$2
 # get size depends on feature
 declare -A featuresSize
 featuresSize=( ["filters_statistics"]="26" ["svd"]="200" ["filters_statistics_sobel"]="27" ["svd_sobel"]="201")
-size=${featuresSize[feature]}
+size=${featuresSize[${feature}]}
 
 # interval of data
 start=0

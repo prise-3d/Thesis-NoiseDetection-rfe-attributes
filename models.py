@@ -27,54 +27,15 @@ def svm_model(X_train, y_train):
 
     return _get_best_model(X_train, y_train)
 
-
-def ensemble_model(X_train, y_train):
-
-    svm_model = _get_best_model(X_train, y_train)
-
-    lr_model = LogisticRegression(solver='liblinear', multi_class='ovr', random_state=1)
-    rf_model = RandomForestClassifier(n_estimators=100, random_state=1)
-
-    ensemble_model = VotingClassifier(estimators=[
-       ('svm', svm_model), ('lr', lr_model), ('rf', rf_model)], voting='soft', weights=[1,1,1])
-
-    ensemble_model.fit(X_train, y_train)
-
-    return ensemble_model
-
-
-def ensemble_model_v2(X_train, y_train):
-
-    svm_model = _get_best_model(X_train, y_train)
-    knc_model = KNeighborsClassifier(n_neighbors=2)
-    gbc_model = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0)
-    lr_model = LogisticRegression(solver='liblinear', multi_class='ovr', random_state=1)
-    rf_model = RandomForestClassifier(n_estimators=100, random_state=1)
-
-    ensemble_model = VotingClassifier(estimators=[
-       ('lr', lr_model),
-       ('knc', knc_model),
-       ('gbc', gbc_model),
-       ('svm', svm_model),
-       ('rf', rf_model)],
-       voting='soft', weights=[1, 1, 1, 1, 1])
-
-    ensemble_model.fit(X_train, y_train)
-
-    return ensemble_model
-
 def rfe_svm_model(X_train, y_train, n_components=1):
 
-    # Cs = [0.001, 0.01, 0.1, 1, 10, 100, 1000]
-    # gammas = [0.001, 0.01, 0.1, 1, 5, 10, 100]
-    # param_grid = [{'estimator__C': Cs, 'estimator__gamma' : gammas}]
-
-    gammas = [0.001, 0.01, 0.1]
-    param_grid = [{'estimator__gamma' : gammas}]
+    Cs = [0.001, 0.01, 0.1, 1, 10, 100, 1000]
+    gammas = [0.001, 0.01, 0.1, 1, 5, 10, 100]
+    param_grid = [{'estimator__C': Cs, 'estimator__gamma' : gammas}]
 
     estimator = svm.SVC(kernel="linear")
-    selector = RFECV(estimator, step=1, cv=4, verbose=0)
-    clf = GridSearchCV(selector, param_grid, cv=5, verbose=1)
+    selector = RFECV(estimator, step=1, cv=5, verbose=0)
+    clf = GridSearchCV(selector, param_grid, cv=10, verbose=1)
     clf.fit(X_train, y_train)
 
     return clf.best_estimator_
