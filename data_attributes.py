@@ -23,11 +23,19 @@ import custom_config as cfg
 from modules.utils import data as dt
 
 
-def _get_26_attributes(block):
+def _get_sobel_filtered_img(lab_img, k_size=3):
+
+    sobelx = cv2.Sobel(lab_img, cv2.CV_64F, 1, 0, ksize=k_size)
+    sobely = cv2.Sobel(lab_img, cv2.CV_64F, 0, 1,ksize=k_size)
+
+    sobel_mag = np.array(np.hypot(sobelx, sobely), 'uint8')  # magnitude
+
+    return sobel_mag
+    
+
+def _get_26_attributes(lab_img):
     
         img_width, img_height = 200, 200
-
-        lab_img = transform.get_LAB_L(block)
         arr = np.array(lab_img)
 
         # compute all filters statistics
@@ -92,12 +100,37 @@ def get_image_features(data_type, block):
     data = []
 
     if 'filters_statistics' in data_type:
-        data = _get_26_attributes(block)
+
+        lab_img = transform.get_LAB_L(block)
+
+        data = _get_26_attributes(lab_img)
 
     if 'filters_statistics_sobel' in data_type:
-        data = _get_26_attributes(block)
-        
 
+        lab_img = transform.get_LAB_L(block)
+
+        data = _get_26_attributes(lab_img)
+
+        # add sobel complexity value to array of data (hence we will have 27 attributes)
+        sobel_std = np.std(_get_sobel_filtered_img(lab_img))
+
+        data.append(sobel_std)
+
+    if 'svd' in data_type:
+
+        lab_img = transform.get_LAB_L(block)
+
+        data = compression.get_SVD_s(lab_img)
+
+    
+    if 'svd_sobel' in data_type:
+
+        lab_img = transform.get_LAB_L(block)
+        data = list(compression.get_SVD_s(lab_img))
+
+        sobel_std = np.std(_get_sobel_filtered_img(lab_img))
+        data.append(sobel_std)
+        
     data = np.array(data) 
 
     return data

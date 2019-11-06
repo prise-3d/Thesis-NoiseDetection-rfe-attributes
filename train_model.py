@@ -89,7 +89,6 @@ def main():
     model = mdl.get_trained_model(p_choice, x_dataset_train, y_dataset_train)
     indices = model.support_
 
-    print(model.n_features_)
     selected_indices = [(i+1) for i in np.arange(len(indices)) if indices[i] == True]
     print(selected_indices)
 
@@ -115,9 +114,9 @@ def main():
 
     X_test, X_val, y_test, y_val = train_test_split(x_dataset_test, y_dataset_test, test_size=0.5, random_state=1)
 
-    if p_choice == 'rfe_svm_model': 
-        X_test = X_test.loc[:, selected_indices]
-        X_val = X_val.loc[:, selected_indices]
+    # update data using indices values
+    X_test = X_test.loc[:, selected_indices]
+    X_val = X_val.loc[:, selected_indices]
 
     y_test_model = model.estimator_.predict(X_test)
     y_val_model = model.estimator_.predict(X_val)

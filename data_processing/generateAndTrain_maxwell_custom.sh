@@ -1,36 +1,43 @@
 #! bin/bash
 
-if [ -z "$1" ]
-  then
-    echo "No argument supplied"
-    echo "Need of vector size"
-    exit 1
-fi
+# result file name
+result_file_path="results/models_comparisons.csv"
 
-if [ -z "$2" ]
+# selection of four scenes (only maxwell)
+scenes="A,D,G,H"
+
+# only one model for the moment
+model="rfe_svm_model"
+
+# check feature param
+if [ -z "$1" ]
   then
     echo "No argument supplied"
     echo "Need of feature information"
     exit 1
 fi
 
-if [ -z "$3" ]
+# accept feature param
+feature=$1
+
+if [ -z "$2" ]
   then
     echo "No argument supplied"
     echo "Need of kind of data to use"
     exit 1
 fi
 
-size=$1
-feature=$2
-data=$3
+feature=$1
+data=$2
 
-# selection of four scenes (only maxwell)
-scenes="A, D, G, H"
+# get size depends on feature
+declare -A featuresSize
+featuresSize=( ["filters_statistics"]="26" ["svd"]="200" ["filters_statistics_sobel"]="27" ["svd_sobel"]="201")
+size=${featuresSize[feature]}
 
+# interval of data
 start=0
 end=$size
-model="rfe_svm_model"
 
 for nb_zones in {10,11,12}; do
 
@@ -43,15 +50,14 @@ for nb_zones in {10,11,12}; do
         echo $FILENAME
 
         # only compute if necessary (perhaps server will fall.. Just in case)
-        if grep -q "${MODEL_NAME}" "${result_filename}"; then
+        if grep -q "${MODEL_NAME}" "${result_file_path}"; then
 
             echo "${MODEL_NAME} results already generated..."
         else
             python generate/generate_data_model_random_${data}.py --output ${FILENAME} --interval "${start},${end}" --kind ${mode} --feature ${feature} --scenes "${scenes}" --nb_zones "${nb_zones}" --percent 1 --renderer "maxwell" --step 10 --random 1 --custom ${CUSTOM_MIN_MAX_FILENAME}
-            #python train_model.py --data ${FILENAME} --output ${MODEL_NAME} --choice ${model}
+            python train_model.py --data ${FILENAME} --output ${MODEL_NAME} --choice ${model}
 
-            #python prediction/predict_seuil_expe_maxwell.py --interval "${start},${end}" --model "saved_models/${MODEL_NAME}.joblib" --mode "${mode}" --feature ${feature} --limit_detection '2' --custom ${CUSTOM_MIN_MAX_FILENAME}
-            #python others/save_model_result_in_md_maxwell.py --interval "${start},${end}" --model "saved_models/${MODEL_NAME}.joblib" --mode "${mode}" --feature ${feature}
+            python others/save_model_result.py --data ${FILENAME} --model "saved_models/${MODEL_NAME}.joblib" --choice ${model} --feature ${feature} --mode ${mode} --zones ${nb_zones}
         fi
     done
 done
