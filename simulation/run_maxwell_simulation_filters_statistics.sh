@@ -7,6 +7,8 @@ simulate_models="simulate_models.csv"
 scenes="A,D,G,H"
 
 size="26"
+declare -A featuresSize
+animals=( ["filters_statistics"]="26" ["svd"]="200" ["filters_statistics_sobel"]="27" ["svd_sobel"]="201")
 
 # for feature in {"lab","mscn","low_bits_2","low_bits_3","low_bits_4","low_bits_5","low_bits_6","low_bits_4_shifted_2","ica_diff","svd_trunc_diff","ipca_diff","svd_reconstruct"}; do
 feature="filters_statistics"

@@ -23,13 +23,8 @@ import custom_config as cfg
 from modules.utils import data as dt
 
 
-def get_image_features(data_type, block):
-    """
-    Method which returns the data type expected
-    """
-
-    if 'filters_statistics' in data_type:
-
+def _get_26_attributes(block):
+    
         img_width, img_height = 200, 200
 
         lab_img = transform.get_LAB_L(block)
@@ -86,8 +81,24 @@ def get_image_features(data_type, block):
 
         for stat in stats:
             data.append(stat[1])
+
+        return data   
+
+def get_image_features(data_type, block):
+    """
+    Method which returns the data type expected
+    """
+
+    data = []
+
+    if 'filters_statistics' in data_type:
+        data = _get_26_attributes(block)
+
+    if 'filters_statistics_sobel' in data_type:
+        data = _get_26_attributes(block)
         
-        data = np.array(data)
+
+    data = np.array(data) 
 
     return data
 

@@ -12,8 +12,6 @@ backup_folder                           = 'backups'
 
 # variables
 features_choices_labels                 = ['filters_statistics', 'svd', 'filters_statistics_sobel', 'svd_sobel']
-optimization_filters_result_filename    = 'optimization_comparisons_filters.csv'
-optimization_attributes_result_filename = 'optimization_comparisons_attributes.csv'
 
 models_names_list                       = ["rfe_svm_model"]
 
