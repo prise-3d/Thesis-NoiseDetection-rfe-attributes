@@ -30,7 +30,7 @@ feature=$1
 declare -A featuresSize
 featuresSize=( ["filters_statistics"]="26" ["svd"]="200" ["filters_statistics_sobel"]="27" ["svd_sobel"]="201")
 
-size=${featuresSize[feature]}
+size=${featuresSize[${feature}]}
 
 for nb_zones in {10,11,12}; do
     for mode in {"svd","svdn","svdne"}; do
