@@ -47,7 +47,7 @@ for nb_zones in {10,11,12}; do
         MODEL_NAME="${model}_N${size}_B${start}_E${end}_nb_zones_${nb_zones}_${feature}_${mode}_${data}"
         CUSTOM_MIN_MAX_FILENAME="N${size}_B${start}_E${end}_nb_zones_${nb_zones}_${feature}_${mode}_${data}_min_max"
 
-        echo $FILENAME
+        # echo $FILENAME
 
         # only compute if necessary (perhaps server will fall.. Just in case)
         if grep -q "${MODEL_NAME}" "${result_file_path}"; then
