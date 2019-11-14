@@ -36,12 +36,14 @@ def main():
     parser.add_argument('--data', type=str, help='dataset filename prefix (without .train and .test)')
     parser.add_argument('--output', type=str, help='output file name desired for model (without .joblib extension)')
     parser.add_argument('--choice', type=str, help='model choice from list of choices', choices=models_list)
+    parser.add_argument('--components', type=int, help='number of components expected by model', default=1)
 
     args = parser.parse_args()
 
     p_data_file = args.data
     p_output    = args.output
     p_choice    = args.choice
+    p_components = args.components
 
     if not os.path.exists(output_model_folder):
         os.makedirs(output_model_folder)
@@ -86,7 +88,7 @@ def main():
     # 2. Construction of the model : Ensemble model structure
     #######################
 
-    model = mdl.get_trained_model(p_choice, x_dataset_train, y_dataset_train)
+    model = mdl.get_trained_model(p_choice, x_dataset_train, y_dataset_train, p_components)
     indices = model.support_
 
     selected_indices = [(i+1) for i in np.arange(len(indices)) if indices[i] == True]
